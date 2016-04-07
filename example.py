@@ -2,7 +2,7 @@ __author__ = 'adamzjw'
 
 from oath import Client
 from DataFetecher import DataFetcher
-from heartrateData import HeartrateTimeSeries
+from TimeSeriesData import HeartrateTimeSeries
 
 clientID = ''
 clientSecret = ''

@@ -17,10 +17,10 @@ class DataFetcher:
             data = response.read()
             return json.loads(data)
         except urllib2.URLError, e:
-            print e.code
+            print e.code()
             print e.read()
 
-    def fetch_heartrate_intraday(self, date, detail_level, end_date=None, start_time=None, end_time=None):
+    def _fetch_intraday(self, path, date, detail_level, end_date=None, start_time=None, end_time=None):
         # to-do: date\time check
 
         if end_date is None:
@@ -33,12 +33,24 @@ class DataFetcher:
 
         if start_time is not None and end_time is not None:
             # query specifit time
-            data_url = 'https://api.fitbit.com/1/user/%s/activities/heart/date/%s/%s/%s/time/%s/%s.json' \
-                       % (self.token.user_id, date, end_date, detail_level, start_time, end_time)
+            data_url = 'https://api.fitbit.com/1/user/%s/%s/date/%s/%s/%s/time/%s/%s.json' \
+                       % (self.token.user_id, path, date, end_date, detail_level, start_time, end_time)
 
         else:
             # query specifit time
-            data_url = 'https://api.fitbit.com/1/user/%s/activities/heart/date/%s/%s/%s.json' \
-                       % (self.token.user_id, date, end_date, detail_level)
+            data_url = 'https://api.fitbit.com/1/user/%s/%s/date/%s/%s/%s.json' \
+                       % (self.token.user_id, path, date, end_date, detail_level)
 
         return self._fecth(data_url)
+
+    def fetch_heartrate_intraday(self, date, detail_level, end_date=None, start_time=None, end_time=None):
+        path = "activities/heart"
+        return self._fetch_intraday(path, date, detail_level, end_date, start_time, end_time)
+
+    def fetch_activity_intraday(self, date, detail_level, end_date=None, start_time=None, end_time=None):
+        path = "activities/distance"
+        return self._fetch_intraday(path, date, detail_level, end_date, start_time, end_time)
+
+    def fetch_steps_intraday(self, date, detail_level, end_date=None, start_time=None, end_time=None):
+        path = "activities/steps"
+        return self._fetch_intraday(path, date, detail_level, end_date, start_time, end_time)
